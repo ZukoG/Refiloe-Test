@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Time 2.0 - Python Strings Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+        #timer {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #d9534f;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .question label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        #result {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ccc;
+            display: none; /* Initially hidden */
+        }
+        #result h2 {
+            text-align: center;
+            color: #333;
+        }
+        #result .correct {
+            background-color: #dff0d8; /* Light green */
+            color: #3c763d;
+            border-left: 5px solid #5cb85c;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        #result .wrong {
+            background-color: #f2dede; /* Light red */
+            color: #a94442;
+            border-left: 5px solid #d9534f;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        details {
+            margin-top: 5px;
+            cursor: pointer;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Fun Time 2.0 - Python Strings Quiz</h1>
+        <div id="timer">Time Left: 45:00</div>
+
+        <form id="quizForm">
+            </form>
+
+        <button onclick="submitQuiz()">Submit</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // ====== Quiz Questions (All 60) ======
+        const quizData = [
+            { q: "1. What does len('Hello') return?", options: ["3","4","5","6"], answer: 2, explanation: "'Hello' has 5 characters." },
+            { q: "2. Which method converts a string to lowercase?", options: ["lower()","down()","small()","min()"], answer: 0, explanation: "lower() makes all letters lowercase." },
+            { q: "3. What is 'Python'[0]?", options: ["P","y","n","Error"], answer: 0, explanation: "Index 0 is the first character: 'P'." },
+            { q: "4. Which operator concatenates strings?", options: ["*","+","-","&"], answer: 1, explanation: "The + operator joins strings." },
+            { q: "5. Which method removes whitespace from both ends?", options: ["strip()","trim()","cut()","remove()"], answer: 0, explanation: "strip() removes whitespace at the start and end." },
+            { q: "6. What does 'abc' * 3 return?", options: ["abcabcabc","abc3","Error","abc"], answer: 0, explanation: "Multiplying strings repeats them." },
+            { q: "7. How do you check if 'a' is in 'apple'?", options: ["'a' in 'apple'","'a' inside 'apple'","contains('a','apple')","check('a','apple')"], answer: 0, explanation: "'in' checks for substring presence." },
+            { q: "8. What does 'Hello'.upper() return?", options: ["HELLO","hello","Hello","Error"], answer: 0, explanation: "upper() converts letters to uppercase." },
+            { q: "9. How to get the last character of a string s?", options: ["s[-1]","s[last]","s[len(s)]","s[0]"], answer: 0, explanation: "s[-1] gives the last character." },
+            { q: "10. Which method counts the occurrences of a substring?", options: ["count()","find()","index()","length()"], answer: 0, explanation: "count() returns the number of occurrences." },
+            
+            { q: "11. What does 'Hello'.replace('H','J') return?", options: ["Jello","Hello","JHllo","Error"], answer: 0, explanation: "replace() changes 'H' to 'J'." },
+            { q: "12. Which method splits a string into a list?", options: ["split()","divide()","break()","slice()"], answer: 0, explanation: "split() divides a string by a separator." },
+            { q: "13. What is 'Python'.find('o')?", options: ["4","3","5","Error"], answer: 0, explanation: "find() returns first index of 'o', which is 4." },
+            { q: "14. Which method checks if a string starts with a substring?", options: ["startswith()","begin()","match()","lead()"], answer: 0, explanation: "startswith() checks the start of the string." },
+            { q: "15. What does '123'.isdigit() return?", options: ["True","False","Error","None"], answer: 0, explanation: "isdigit() is True when all chars are digits." },
+            
+            { q: "16. How to remove all spaces in 'a b c'?", options: ["replace(' ','')","strip()","delete(' ')","trim()"], answer: 0, explanation: "replace(' ','') removes all spaces." },
+            { q: "17. Which method converts string to title case?", options: ["title()","capitalize()","upper()","lower()"], answer: 0, explanation: "title() capitalizes first letter of each word." },
+            { q: "18. What does 'hello world'.split()[1] return?", options: ["world","hello","Error"," "], answer: 0, explanation: "split() gives ['hello','world'], index 1 is 'world'." },
+            { q: "19. How do you join a list ['a','b','c'] into 'a-b-c'?", options: ["'-'.join(['a','b','c'])","concat(['a','b','c'])","['a','b','c'].join('-')","join('-',['a','b','c'])"], answer: 0, explanation: "join() concatenates list items with a separator." },
+            { q: "20. What does 'Python'.count('o') return?", options: ["1","0","2","Error"], answer: 0, explanation: "There's one 'o' in 'Python'." },
+            
+            { q: "21. How to check if a string ends with '.com'?", options: ["endswith('.com')","ends('.com')","finish('.com')","last('.com')"], answer: 0, explanation: "endswith() checks string suffix." },
+            { q: "22. What does 'apple\\norange'.splitlines() return?", options: ["['apple','orange']","['apple\\norange']","['apple']","['orange']"], answer: 0, explanation: "splitlines() splits at newline characters." },
+            { q: "23. How to replace all occurrences of 'a' with 'b' in 'banana'?", options: ["replace('a','b')","switch('a','b')","swap('a','b')","sub('a','b')"], answer: 0, explanation: "replace() changes all 'a's to 'b's." },
+            { q: "24. Which method returns a string in uppercase with first letter only?", options: ["capitalize()","title()","upper()","lower()"], answer: 0, explanation: "capitalize() makes first letter uppercase, rest lowercase." },
+            { q: "25. What does ' abc '.lstrip() return?", options: ["abc "," abc","abc","Error"], answer: 2, explanation: "lstrip() removes left whitespace." },
+            
+            { q: "26. What does ' abc '.rstrip() return?", options: [" abc","abc ","abc","Error"], answer: 1, explanation: "rstrip() removes right whitespace." },
+            { q: "27. How to check if all characters are alphabetic in 'Python'?", options: ["isalpha()","isletters()","ischar()","isstring()"], answer: 0, explanation: "isalpha() returns True if all letters." },
+            { q: "28. Which method returns index of substring or -1 if not found?", options: ["find()","index()","search()","locate()"], answer: 0, explanation: "find() returns -1 if substring is missing." },
+            { q: "29. What does 'a,b,c'.split(',') return?", options: ["['a','b','c']","['a,b,c']","['abc']","Error"], answer: 0, explanation: "split(',') splits string at commas." },
+            { q: "30. How do you remove a character at index 2 in 'Python'?", options: ["s = s[:2] + s[3:]","s.remove(2)","s.delete(2)","del s[2]"], answer: 0, explanation: "Use slicing to remove a character." },
+            
+            { q: "31. How to check if 'Hello' contains only printable characters?", options: ["isprintable()","isprint()","printable()","isvisible()"], answer: 0, explanation: "isprintable() returns True if printable." },
+            { q: "32. What does 'hello'.rjust(10) do?", options: ["Right aligns in width 10","Left aligns in width 10","Error","Centers string"], answer: 0, explanation: "rjust() pads left to width 10." },
+            { q: "33. What does 'Python'.encode() return?", options: ["bytes","str","int","Error"], answer: 0, explanation: "encode() returns a bytes object." },
+            { q: "34. Which method removes trailing newline characters?", options: ["rstrip('\\n')","strip('\\n')","lstrip('\\n')","remove('\\n')"], answer: 0, explanation: "rstrip('\\n') strips newline at the end." },
+            { q: "35. How to check if string starts with either 'Py' or 'py'?", options: ["startswith(('Py','py'))","startwith('Py','py')","starts('Py','py')","Error"], answer: 0, explanation: "startswith() accepts a tuple of prefixes." },
+            { q: "36. What does 'Hello World'.swapcase() return?", options: ["hELLO wORLD","HELLO WORLD","hello world","Error"], answer: 0, explanation: "swapcase() flips case of each letter." },
+            { q: "37. How do you remove all punctuation from a string?", options: ["Use str.translate() with string.punctuation","strip()","replace()","delete()"], answer: 0, explanation: "translate() removes punctuation." },
+            { q: "38. What does 'abc'.zfill(5) return?", options: ["00abc","abc00","0abc0","abc"], answer: 0, explanation: "zfill() pads with zeros to width 5." },
+            { q: "39. How do you check if a string ends with a newline?", options: ["endswith('\\n')","endswith('\\r')","endswith('newline')","endswith('\\t')"], answer: 0, explanation: "endswith('\\n') checks newline." },
+            { q: "40. Which method removes both leading and trailing tabs?", options: ["strip('\\t')","lstrip('\\t')","rstrip('\\t')","remove('\\t')"], answer: 0, explanation: "strip('\\t') removes tabs both sides." },
+            
+            { q: "41. What does 'Python'.center(10, '*') return?", options: ["**Python**","Python****","****Python","Error"], answer: 0, explanation: "center() pads string on both sides." },
+            { q: "42. How to convert a string '123' to integer?", options: ["int('123')","str('123')","float('123')","convert('123')"], answer: 0, explanation: "int() converts numeric string to integer." },
+            { q: "43. What does 'abc'.isidentifier() check?", options: ["Valid Python identifier","Alphabet only","Digits only","Error"], answer: 0, explanation: "isidentifier() checks valid variable names." },
+            { q: "44. How to check if string is title‑cased?", options: ["istitle()","isTitled()","title()","capitalize()"], answer: 0, explanation: "istitle() returns True if every word capitalized." },
+            { q: "45. What does 'abc'.rpartition('b') return?", options: ["('a','b','c')","('','b','c')","('a','b','')","('','b','')"], answer: 0, explanation: "rpartition splits string at last 'b'." },
+            { q: "46. Which method pads string on the left with spaces?", options: ["rjust()","ljust()","center()","pad()"], answer: 0, explanation: "rjust() pads on left." },
+            { q: "47. How to remove all non‑alphanumeric characters from a string?", options: ["Use regex: /[^a-zA-Z0-9]/g","strip()","replace()","delete()"], answer: 0, explanation: "Regex removes non-alphanumeric chars." },
+            { q: "48. What does 'hello'.encode('utf-8') return?", options: ["b'hello'","'hello'","bytes","Error"], answer: 0, explanation: "encode() gives bytes object." },
+            { q: "49. Which built-in returns Unicode code of a character?", options: ["ord()","encode()","decode()","ascii()"], answer: 0, explanation: "ord() returns integer code point." },
+            { q: "50. How to check if string contains only decimal characters?", options: ["isdecimal()","isdigit()","isnumeric()","all()"], answer: 0, explanation: "isdecimal() returns True if decimal only." },
+            { q: "51. How to join a list of words with spaces: ['hello','world'] → 'hello world'?", options: ["' '.join(list)","join(list,' ')","concat(list)","list.join(' ')"], answer: 0, explanation: "join() places separator between elements." },
+            { q: "52. How to take substring from index 2 to 5 in 'abcdef'?", options: ["s[2:6]","s[2:5]","s[3:5]","s[2:6+1]"], answer: 0, explanation: "Slices go up to but not include the end index." },
+            { q: "53. How do you escape quotes inside a string?", options: ["Use backslash \\\\","Use double quotes","Use single quotes","Use forward slash /"], answer: 0, explanation: "Backslash (\\\\) escapes quotes." },
+            { q: "54. Which method removes both leading & trailing newlines?", options: ["strip('\\n')","lstrip('\\n')","rstrip('\\n')","delete('\\n')"], answer: 0, explanation: "strip() removes newlines at both ends." },
+            { q: "55. How to repeat string 'a' 10 times?", options: ["'a'*10","repeat('a',10)","'a'.multiply(10)","rep('a')"], answer: 0, explanation: "Multiplying repeats the string." },
+            { q: "56. How to check if string is all uppercase?", options: ["isupper()","upper()","capitalize()","title()"], answer: 0, explanation: "isupper() True if all letters uppercase." },
+            { q: "57. What does 'Python'.swapcase() return?", options: ["pYTHON","Python","PYTHON","python"], answer: 0, explanation: "swapcase() inverts the case of each letter." },
+            { q: "58. How to remove all spaces using regex?", options: ["/ /g","strip()","replace(' ','')","delete(' ')"], answer: 0, explanation: "Regex with global flag removes all spaces." },
+            { q: "59. Which method pads string on both sides?", options: ["center()","rjust()","ljust()","pad()"], answer: 0, explanation: "center() pads both left and right." },
+            { q: "60. How to check if a string is only whitespace?", options: ["isspace()","iswhite()","isblank()","isempty()"], answer: 0, explanation: "isspace() returns True if all chars are whitespace." }
+        ];
+        
+        // ====== Timer ======
+        let timeLeft = 45 * 60;
+        let countdown; // Declare outside for global access
+        function startTimer() {
+            const timer = document.getElementById("timer");
+            countdown = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                if (seconds < 10) seconds = "0" + seconds;
+                timer.textContent = `Time Left: ${minutes}:${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    submitQuiz();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+        
+        // ====== Load Quiz ======
+        function loadQuiz() {
+            const form = document.getElementById("quizForm");
+            quizData.forEach((item, index) => {
+                const div = document.createElement("div");
+                div.className = "question";
+                
+                let html = `<p><strong>${item.q}</strong></p>`;
+                item.options.forEach((opt, i) => {
+                    html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+                });
+                
+                div.innerHTML = html;
+                form.appendChild(div);
+            });
+        }
+        
+        // ====== Submit Quiz ======
+        function submitQuiz() {
+            clearInterval(countdown); // Stop the timer
+            const result = document.getElementById("result");
+            let score = 0;
+            result.innerHTML = "";
+            result.style.display = "block";
+            
+            quizData.forEach((item, i) => {
+                const selected = document.querySelector(`input[name='q${i}']:checked`);
+                const selectedValue = selected ? parseInt(selected.value) : null;
+                const isCorrect = selectedValue === item.answer;
+                
+                if (isCorrect) score++;
+                
+                // Get the question div to apply color coding
+                const questionDiv = document.querySelectorAll(".question")[i];
+                if (questionDiv) {
+                    questionDiv.classList.remove("correct","wrong"); // Remove any existing classes
+                    // Apply class for visual feedback (this uses the #result styling, but let's apply a new class for the question block itself)
+                    // For simplicity and clarity, we'll keep the visual feedback primarily in the #result section for now, 
+                    // as dynamically changing the question's class here would be overwritten by a proper re-load/refresh.
+                }
+
+                const userAnswer = selected ? item.options[selectedValue] : "No answer selected";
+                
+                result.innerHTML += `
+                    <div class="${isCorrect ? "correct" : "wrong"}">
+                        <p><strong>${item.q}</strong></p>
+                        <p>Your answer: ${userAnswer}</p>
+                        <p>Correct answer: ${item.options[item.answer]}</p>
+                        <details>
+                            <summary>Explanation</summary>
+                            <p>${item.explanation}</p>
+                        </details>
+                    </div><br>`;
+            });
+            
+            result.innerHTML = `<h2>You scored ${score} out of ${quizData.length}</h2>` + result.innerHTML;
+            
+            timeLeft = 0;
+            document.querySelector('button').disabled = true; // Disable submit button after submission
+        }
+        
+        // ====== Initialize ======
+        loadQuiz();
+        startTimer();
+    </script>
+</body>
+</html>
